@@ -38,9 +38,10 @@ export const readRecords = async (
       let dataResult;
 
       if (Array.isArray(result)) {
+        const [rows] = result;
         dataResult = {
-          count: result.length,
-          rows: result,
+          count: rows.length,
+          rows
         };
       } else {
         dataResult = {

@@ -121,8 +121,9 @@ export const buildFiltersToRaw = (
       ? `${topClause}*`
       : `${topClause}${selectedColumns.join(', ')}`;
 
+  
   const rawSql = `
-    SELECT ${selectClause} FROM "${table}"
+    SELECT ${selectClause} FROM ${table}
     ${joinClause}
     ${whereClause}
     ${groupByClause}

@@ -16,7 +16,7 @@ const createDbConfig = (): Knex.Config => {
           host: config.dbHost,
           user: config.dbUser,
           password: config.dbPassword,
-          port: Number(config.dbPort),
+          port: 5432,
           database: config.dbName,
           ssl: {
             rejectUnauthorized: false,
@@ -32,12 +32,26 @@ const createDbConfig = (): Knex.Config => {
           server: config.dbHost,
           user: config.dbUser,
           password: config.dbPassword,
-          port: Number(config.dbPort),
+          port: 1433,
           database: config.dbName,
           options: {
             encrypt: true,
             trustServerCertificate: false,
           },
+        },
+        pool: commonPool,
+        useNullAsDefault: true,
+      };
+
+      case 'mysql':
+      return {
+        client: 'mysql',
+        connection: {
+          host: config.dbHost,
+          port: 3306,
+          user: config.dbUser,
+          password: config.dbPassword,
+          database: config.dbName,
         },
         pool: commonPool,
         useNullAsDefault: true,
