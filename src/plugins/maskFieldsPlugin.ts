@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin'
-import config from '../config/indexConfig'
+import config from '../config/indexConfig.ts'
 function deepMask(obj: any, fieldsToMask: (string | RegExp)[]): any {
     if (Array.isArray(obj)) {
         return obj.map(item => deepMask(item, fieldsToMask));

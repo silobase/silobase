@@ -132,7 +132,6 @@ export const buildFiltersToRaw = (
     ${offsetClause}
     ${dbClient === 'pg' ? limitClause : ''}
   `.trim();
-
   return { rawSql, bindings };
 };
 
