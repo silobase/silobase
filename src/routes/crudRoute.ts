@@ -1,4 +1,4 @@
-import * as CrudService from '../services/crudService';
+import * as CrudService from '../services/crudService.ts';
 import { FastifyPluginAsync } from 'fastify';
 
 

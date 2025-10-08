@@ -1,9 +1,21 @@
 {
+	"name": "silobase",
+	"version": "1.0.0",
+	"type": "module",
+	"bin": {
+		"silobase": "bin/silobase.js"
+	},
+	"files": [
+		"dist",
+		"bin"
+	],
 	"scripts": {
 		"build": "tsc -p tsconfig.json",
-		"start": "node server.js",
-		"dev": "ts-node-dev --respawn --transpile-only server.ts",
-		"serve": "npm run build && npm start"
+		"start": "node dist/server.js",
+		"dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+		"serve": "npm run build && npm start",
+		"prepublishOnly": "npm run build && mv README.md README.github.md && cp README.npm.md README.md",
+		"postpublish": "mv README.github.md README.md"
 	},
 	"dependencies": {
 		"@fastify/cors": "^11.0.1",
@@ -18,6 +30,7 @@
 	"devDependencies": {
 		"@types/node": "^24.0.3",
 		"ts-node-dev": "^2.0.0",
+		"tsc-alias": "^1.8.16",
 		"typescript": "^5.8.3"
 	}
 }

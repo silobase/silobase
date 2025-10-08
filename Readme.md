@@ -127,9 +127,5 @@ See [`LICENSE`](./LICENSE) for the open-source license text, and [`LICENSE-COMME
 © 2025 Silobase Authors. All rights reserved.
 
 
----
 
-## 📄 License
-
-[MIT](LICENSE)
 

@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
-import { GenericResponse } from '../types/responseType'
-import { buildFiltersToRaw } from '../utils/buildQueryFilters'
-import config from '../config/indexConfig'
+import { GenericResponse } from '../types/responseType.ts'
+import { buildFiltersToRaw } from '../utils/buildQueryFilters.ts'
+import config from '../config/indexConfig.ts'
 
 export const createRecord = async (
   app: FastifyInstance,
@@ -31,31 +31,31 @@ export const readRecords = async (
   table: string,
   query: Record<string, string>
 ): Promise<GenericResponse<any | null>> => {
-  try{
-      const { rawSql, bindings } = buildFiltersToRaw(table, query, config.dbClient)
-      const result = await app.db.raw(rawSql, bindings)
+  try {
+    const { rawSql, bindings } = buildFiltersToRaw(table, query, config.dbClient)
+    const result = await app.db.raw(rawSql, bindings)
 
-      let dataResult;
 
-      if (Array.isArray(result)) {
-        const [rows] = result;
-        dataResult = {
-          count: rows.length,
-          rows
-        };
-      } else {
-        dataResult = {
-          count: result.rowCount ?? result.rows?.length ?? 0,
-          rows: result.rows ?? result[0],
-        };
-      }
-      return {
-        status: 'success',
-        data: dataResult,
-        code: 200,
-      }
+    let dataResult;
 
-  }catch(error: any) {
+    if (Array.isArray(result)) {
+      dataResult = {
+        count: result.length,
+        rows: result
+      };
+    } else {
+      dataResult = {
+        count: result.rowCount ?? result.rows?.length ?? 0,
+        rows: result.rows ?? result[0],
+      };
+    }
+    return {
+      status: 'success',
+      data: dataResult,
+      code: 200,
+    }
+
+  } catch (error: any) {
     app.log.error(error)
     return {
       status: 'error',

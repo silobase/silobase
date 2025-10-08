@@ -1,5 +1,5 @@
 import fp from 'fastify-plugin'
-import config from '../config/indexConfig'
+import config from '../config/indexConfig.ts'
 
 type Permission = 'read' | 'write' | 'full'
 

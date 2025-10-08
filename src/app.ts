@@ -1,9 +1,9 @@
 import fastify from "fastify";
 import cors from '@fastify/cors'
-import db from "./plugins/dbPlugin";
-import crudRoutes from "./routes/crudRoute";
-import auth from "./plugins/authPlugin";
-import maskFields from "./plugins/maskFieldsPlugin";
+import db from "./plugins/dbPlugin.ts";
+import crudRoutes from "./routes/crudRoute.ts";
+import auth from "./plugins/authPlugin.ts";
+import maskFields from "./plugins/maskFieldsPlugin.ts";
 
 export default async function createApp() {
   const app = fastify({
