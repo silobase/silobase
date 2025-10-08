@@ -1,3 +1,13 @@
+/**
+ * Silobase - Dual Licensed under AGPLv3 and Commercial License
+ * Copyright (C) 2025 Silobase Authors
+ *
+ * This file is part of Silobase.
+ * 
+ * You may use this file under the terms of the GNU Affero General Public License v3.0
+ * as published by the Free Software Foundation, or under a commercial license.
+ */
+
 import createApp from './src/app'
 
 const start = async () => {
