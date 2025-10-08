@@ -1,6 +1,17 @@
 {
 	"name": "silobase",
 	"version": "1.0.0",
+	"license": "AGPL-3.0-only OR LicenseRef-Commercial",
+	"licenses": [
+		{
+			"type": "AGPL-3.0-only",
+			"url": "https://www.gnu.org/licenses/agpl-3.0.html"
+		},
+		{
+			"type": "Commercial",
+			"url": "https://github.com/<your-github-username>/silobase/blob/main/LICENSE-COMMERCIAL.md"
+		}
+	],
 	"type": "module",
 	"bin": {
 		"silobase": "bin/silobase.js"

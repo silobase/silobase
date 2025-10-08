@@ -83,3 +83,16 @@ curl -H "x-api-key: $API_KEY_READ" http://localhost:3000/rest/v1/users
 
 👉 See the full docs on GitHub: [silobase/silobase](https://github.com/silobase/silobase)
 
+## License
+
+Silobase is **dual-licensed** under:
+
+- **GNU Affero General Public License v3.0 (AGPLv3)** for open-source and community use.
+- **Commercial License** for organizations that wish to embed, modify, or offer Silobase
+  as a hosted service without open-sourcing their derivative work.
+
+See [LICENSE](https://github.com/<your-github-username>/silobase/blob/main/LICENSE) and
+[LICENSE-COMMERCIAL.md](https://github.com/<your-github-username>/silobase/blob/main/LICENSE-COMMERCIAL.md)
+for details.
+
+To purchase a commercial license, please contact the GitHub author.
