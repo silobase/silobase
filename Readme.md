@@ -85,9 +85,9 @@ Full docs are available at the silobase docs website
 ```
 silobase/
 ├── .env.example           # Example config
-├── server.ts              # Entry point
 ├── src/
 │   ├── app.ts             # App bootstrap
+│   ├── server.ts              # Entry point
 │   ├── config/            # Env loaders
 │   ├── auth/              # Auth + DB plugins
 │   ├── routes/            # REST route handlers
@@ -99,7 +99,8 @@ silobase/
 ## 🧪 Roadmap
 
 * [x] PostgreSQL, MSSQL support
-* [ ] MSSQL, SQLite
+* [x] MSSQL, MySQL
+* [ ] SQLite
 * [ ] File storage (S3, Azure Blob)
 * [ ] Email provider support
 * [ ] GraphQL layer (future)
