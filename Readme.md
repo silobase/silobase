@@ -122,7 +122,7 @@ See [`LICENSE`](./LICENSE) for the open-source license text, and [`LICENSE-COMME
 
 **In short:**
 - If you’re building open-source software — you can use Silobase freely under AGPLv3.
-- If you’re building closed-source or commercial software — please [contact us](mailto:licensing@silobase.io) for a commercial license.
+- If you’re building closed-source or commercial software — please [contact us](mailto:adegokesimi@gmail.com) for a commercial license.
 
 © 2025 Silobase Authors. All rights reserved.
 
