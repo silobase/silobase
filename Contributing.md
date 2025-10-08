@@ -1,8 +1,8 @@
 ### ✅ CONTRIBUTING.md
 
-# 🤝 Contributing to DataPlane
+# 🤝 Contributing to Silobase
 
-Thanks for your interest in contributing to **DataPlane**! We're excited to have your help improving this open-source project.
+Thanks for your interest in contributing to **Silobase**! We're excited to have your help improving this open-source project.
 
 
 ## 📦 How to Contribute
@@ -12,8 +12,8 @@ Thanks for your interest in contributing to **DataPlane**! We're excited to have
 Click the **Fork** button and clone your fork:
 
 ```bash
-git clone https://github.com/yourusername/dataplane.git
-cd dataplane
+git clone https://github.com/silobase/silobase.git
+cd silobase
 npm install
 ```
 
