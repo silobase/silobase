@@ -111,19 +111,18 @@ silobase/
 
 Pull requests are welcome! Please open an issue first if you'd like to suggest a feature or report a bug.
 
-## License
+## 📜 License
 
-Silobase is **dual-licensed** under:
+- **Core (`src/core`)** — licensed under [Apache 2.0](./LICENSE)  
+  Fully open source and free for self-hosted use.
 
-- **GNU Affero General Public License v3.0 (AGPLv3)** for open-source and community use.
-- **Commercial License** for organizations that wish to embed, modify, or offer Silobase
-  as a hosted service without open-sourcing their derivative work.
+- **Enterprise modules (`src/enterprise`)** — licensed under [Elastic License 2.0](./LICENSE.enterprise)  
+  Source-available and usable within your organization.  
+  May not be used to offer Silobase as a hosted or managed service.
 
-See [`LICENSE`](./LICENSE) for the open-source license text, and [`LICENSE-COMMERCIAL.md`](./LICENSE-COMMERCIAL.md) for commercial terms.
 
-**In short:**
-- If you’re building open-source software — you can use Silobase freely under AGPLv3.
-- If you’re building closed-source or commercial software — please [contact us](mailto:adegokesimi@gmail.com) for a commercial license.
+This model ensures Silobase remains open and community-driven, while protecting the sustainability of enterprise development.
+
 
 © 2025 Silobase Authors. All rights reserved.
 

@@ -1,4 +1,4 @@
-import createApp from './app.ts'
+import createApp from './core/app.ts'
 
 const start = async () => {
   const app = await createApp()

@@ -1,15 +1,16 @@
 {
 	"name": "silobase",
 	"version": "1.0.0",
-	"license": "AGPL-3.0-only OR LicenseRef-Commercial",
+	"description": "Open-source backend engine that exposes SQL databases as REST APIs. Supabase for enterprise.",
+	"license": "Apache 2.0 OR Elastic License 2.0",
 	"licenses": [
 		{
-			"type": "AGPL-3.0-only",
-			"url": "https://www.gnu.org/licenses/agpl-3.0.html"
+			"type": "Apache 2.0",
+			"url": "https://github.com/silobase/silobase/blob/main/LICENSE.md"
 		},
 		{
-			"type": "Commercial",
-			"url": "https://github.com/<your-github-username>/silobase/blob/main/LICENSE-COMMERCIAL.md"
+			"type": "Elastic License 2.0",
+			"url": "https://github.com/silobase/silobase/blob/main/LICENSE.enterprise.md"
 		}
 	],
 	"type": "module",
@@ -21,9 +22,10 @@
 		"bin"
 	],
 	"scripts": {
-		"build": "tsc -p tsconfig.json",
+		"build": "rm -rf dist && tsc -p tsconfig.json",
 		"start": "node dist/server.js",
-		"dev": "ts-node-dev --respawn --transpile-only src/server.ts",
+		"predev": "npx --yes tsx --version || npm install -D tsx",
+		"dev": "tsx watch ./src/server.ts",
 		"serve": "npm run build && npm start",
 		"prepublishOnly": "npm run build && mv README.md README.github.md && cp README.npm.md README.md",
 		"postpublish": "mv README.github.md README.md"
@@ -42,6 +44,8 @@
 		"@types/node": "^24.0.3",
 		"ts-node-dev": "^2.0.0",
 		"tsc-alias": "^1.8.16",
+		"tsx": "^4.20.6",
 		"typescript": "^5.8.3"
-	}
+	},
+	"author": "similoluwa adegoke <adegokesimi@gmail.com>"
 }
