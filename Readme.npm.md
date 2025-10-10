@@ -4,9 +4,14 @@
 [![license](https://img.shields.io/github/license/silobase/silobase)](https://github.com/silobase/silobase/blob/main/LICENSE)
 [![GitHub stars](https://img.shields.io/github/stars/silobase/silobase?style=social)](https://github.com/silobase/silobase)
 
-Silobase is an **open-source self-hosted Backend-as-a-Service (BaaS)** that exposes your own databases over a clean REST API — with **zero backend code**.
+### Own it all. Infra-agnostic. Perfect for internal tools and enterprise back-offices.
 
-Unlike **Firebase** or **Supabase**, Silobase does not tie you to a managed database. It connects directly to your own infrastructure: **Postgres, MSSQL, or MySQL** (SQLite coming soon).
+**Silobase** is an open-source, self-hosted Backend-as-a-Service (BaaS) that instantly exposes your existing SQL databases over a clean REST API — with zero backend code.
+
+Unlike Firebase or Supabase, Silobase doesn’t lock you into a managed database. It connects directly to your own infrastructure — **Postgres**, **MSSQL**, or **MySQL** (with **SQLite** support coming soon).
+
+> Configure via `.env`, deploy anywhere, and keep full control of your stack.
+
 
 ---
 
