@@ -1,7 +1,7 @@
 import { FastifyInstance } from 'fastify'
-import { GenericResponse } from '../types/responseType.ts'
-import { buildFiltersToRaw } from '../utils/buildQueryFilters.ts'
-import config from '../config/indexConfig.ts'
+import { GenericResponse } from '../../types/responseType.ts'
+import { buildFiltersToRaw } from '../../utils/buildQueryFilters.ts'
+import config from '../../config/indexConfig.ts'
 
 export const createRecord = async (
   app: FastifyInstance,

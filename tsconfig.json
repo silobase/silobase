@@ -114,7 +114,7 @@
     /* Completeness */
     // "skipDefaultLibCheck": true,                      /* Skip type checking .d.ts files that are included with TypeScript. */
     "skipLibCheck": true,                                 /* Skip type checking all .d.ts files. */
-    "types": ["./src/core/types/fastify"]
+    "types": ["./src/types/fastify"]
   },
   "include": ["src"]
 }

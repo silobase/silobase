@@ -1,14 +1,8 @@
 import fp from 'fastify-plugin'
-import config from '../config/indexConfig.ts'
+import { Permission } from '../../types/permissionType.ts'
+import { getKeyPermission } from '../../utils/keyPermissionFilter.ts'
 
-type Permission = 'read' | 'write' | 'full'
 
-function getKeyPermission(key: string | undefined): Permission | null {
-  if (key === config.apiKeys.full) return 'full'
-  if (key === config.apiKeys.write) return 'write'
-  if (key === config.apiKeys.read) return 'read'
-  return null
-}
 
 export default fp(async (fastify) => {
   fastify.decorateRequest('permission', null as Permission | null)

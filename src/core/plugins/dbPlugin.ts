@@ -1,6 +1,6 @@
 import fp from 'fastify-plugin';
 import knex, { Knex } from 'knex';
-import config from '../config/indexConfig.ts';
+import config from '../../config/indexConfig.ts';
 
 const createDbConfig = (): Knex.Config => {
   const commonPool = {

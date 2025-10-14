@@ -32,5 +32,9 @@ export default {
     write: process.env.API_KEY_WRITE || '',
     full: process.env.API_KEY_FULL || '',
   },
-  maskFields: [...defaultMaskedFields, ...maskEnvFields]
+  maskFields: [...defaultMaskedFields, ...maskEnvFields],
+
+  auditLogToDb: String(process.env.AUDIT_LOG_TO_DB).toLowerCase() === 'true',
+  auditLogDir: process.env.AUDIT_LOG_DIR || './audit',
+  licenseKey: process.env.LICENSE_KEY || '',
 }
