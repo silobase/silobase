@@ -1,6 +1,6 @@
 {
 	"name": "silobase",
-	"version": "1.1.0",
+	"version": "2.0.0",
 	"description": "Open-source backend engine that exposes SQL databases as REST APIs. Supabase for enterprise.",
 	"license": "(Apache-2.0 OR Elastic-2.0)",
 	"licenses": [
