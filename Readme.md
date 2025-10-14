@@ -8,7 +8,7 @@
 
 **Silobase** is an open-source, self-hosted Backend-as-a-Service (BaaS) that instantly exposes your existing SQL databases over a clean REST API — with zero backend code.
 
-Unlike Firebase or Supabase, Silobase doesn’t lock you into a managed database. It connects directly to your own infrastructure — **Postgres**, **MSSQL**, or **MySQL** (with **SQLite** support coming soon).
+Unlike Firebase or Supabase, Silobase doesn’t lock you into a managed database. It connects directly to your own infrastructure — **Postgres**, **MSSQL**, **MySQL** or **SQLite**.
 
 > Configure via `.env`, deploy anywhere, and keep full control of your stack.
 
