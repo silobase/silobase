@@ -6,3 +6,28 @@ GET /enterprise/audit?since=2025-10-10
 
 # Limit to 20 events
 GET /enterprise/audit?limit=20
+
+
+GET /rest/v1/users?country=eq.US&age=gt.20
+GET /rest/v1/users?country=in.(US,UK)&name=like.li
+GET /rest/v1/users?age=lt.30&age=lte.28
+GET /rest/v1/users?orderBy=age&order=desc&limit=3
+GET /rest/v1/users?orderBy=id&limit=2&offset=0
+GET /rest/v1/users?orderBy=id&limit=2&offset=2
+GET /rest/v1/posts?group_by=user_id&having.likes.gt.20
+GET /rest/v1/posts?join=users:on=posts.user_id=users.id&select=posts.id,users.name,posts.title,posts.likes&where=likes.gt.10
+GET /rest/v1/posts?join=users:on=posts.user_id=users.id&select=users.country,COUNT(posts.id) as total_posts&group_by=users.country
+GET /rest/v1/comments?join=posts:on=comments.post_id=posts.id&join=users:on=comments.user_id=users.id&select=comments.id,posts.title,users.name
+GET /rest/v1/users?name=like.a&orderBy=age&order=asc
+GET /rest/v1/users
+GET /rest/v1/users?country=in.(US,UK)&age=gte.25&age=lte.35&role=eq.admin
+GET /rest/v1/comments?join=posts:on=comments.post_id=posts.id&join=users:on=comments.user_id=users.id&select=comments.id,comments.content,posts.title,users.name&where=posts.likes.gt.10&where=users.country.eq.US
+GET /rest/v1/posts?group_by=user_id&select=user_id,COUNT(posts.id) as post_count&having.likes.gt.20
+GET /rest/v1/posts?join=users:on=posts.user_id=users.id&select=users.country,COUNT(posts.id) as total_posts&group_by=users.country&orderBy=total_posts&order=desc&limit=2
+GET /rest/v1/users?country=in.(US,UK)&name=like.a&age=gt.20&age=lte.30
+GET /rest/v1/posts?orderBy=likes&order=desc&limit=2&offset=0
+GET /rest/v1/posts?orderBy=likes&order=desc&limit=2&offset=2
+GET /rest/v1/posts?likes=gt.1000
+GET /rest/v1/comments?join=posts:on=comments.post_id=posts.id&join=users:on=comments.user_id=users.id&select=users.name,COUNT(comments.id) as comment_count&group_by=users.name
+GET /rest/v1/comments?join=posts:on=comments.post_id=posts.id&join=users:on=comments.user_id=users.id&select=users.country,COUNT(comments.id) as total_comments&where=posts.likes.gt.20&group_by=users.country
+GET /rest/v1/users?country=in.(US,UK)&age=gte.20&age=lte.30&name=like.i

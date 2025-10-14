@@ -43,7 +43,7 @@ const createDbConfig = (): Knex.Config => {
         useNullAsDefault: true,
       };
 
-      case 'mysql':
+    case 'mysql':
       return {
         client: 'mysql',
         connection: {
@@ -55,6 +55,17 @@ const createDbConfig = (): Knex.Config => {
         },
         pool: commonPool,
         useNullAsDefault: true,
+      };
+
+    case 'sqlite':
+    case 'sqlite3':
+      return {
+        client: 'sqlite3',
+        connection: {
+          filename: config.dbName || './data.sqlite',
+        },
+        useNullAsDefault: true, // required for SQLite
+        pool: { min: 1, max: 1 }, // SQLite is file-based; avoid concurrency issues
       };
 
     default:
