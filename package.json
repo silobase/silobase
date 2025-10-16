@@ -1,6 +1,6 @@
 {
 	"name": "silobase",
-	"version": "2.0.0",
+	"version": "2.0.1",
 	"description": "Open-source backend engine that exposes SQL databases as REST APIs. Supabase for enterprise.",
 	"license": "Apache-2.0",
 	"licenses": [
@@ -25,7 +25,7 @@
 		"serve": "npm run build && npm start",
 		"prepublishOnly": "npm run build && mv README.md README.github.md && cp README.npm.md README.md",
 		"postpublish": "mv README.github.md README.md",
-		 "test": "vitest"
+		"test": "vitest"
 	},
 	"dependencies": {
 		"@fastify/cors": "^11.0.1",
