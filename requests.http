@@ -1,11 +1,4 @@
-# Get latest 100 audit events (auto-detect source)
-GET /enterprise/audit
 
-# Get only recent events since October 10, 2025
-GET /enterprise/audit?since=2025-10-10
-
-# Limit to 20 events
-GET /enterprise/audit?limit=20
 
 
 GET /rest/v1/users?country=eq.US&age=gt.20

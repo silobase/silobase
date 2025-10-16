@@ -2,15 +2,11 @@
 	"name": "silobase",
 	"version": "2.0.0",
 	"description": "Open-source backend engine that exposes SQL databases as REST APIs. Supabase for enterprise.",
-	"license": "(Apache-2.0 OR Enhanced Elastic 2.0 Version)",
+	"license": "Apache-2.0",
 	"licenses": [
 		{
 			"type": "Apache-2.0",
 			"url": "https://github.com/silobase/silobase/blob/main/LICENSE.md"
-		},
-		{
-			"type": "Enhanced Elastic 2.0 Version",
-			"url": "https://github.com/silobase/silobase/blob/main/LICENSE.enterprise.md"
 		}
 	],
 	"type": "module",
