@@ -32,14 +32,14 @@ const crudRoutes: FastifyPluginAsync = async (fastify) => {
         reply.status(result?.code).send(result);
     });
 
-    fastify.delete('/:table/:id', async (request, reply) => {   
-        if (!['write', 'full'].includes(request.permission!)) {
-            return reply.code(403).send({ error: 'Forbidden: Write access required' })
-        }
-        const { table, id } = request.params as { table: string; id: string };
-        const result: any = await CrudService.deleteRecord(fastify, table, id);
-        reply.status(result?.code).send(result);
-    });
+    // fastify.delete('/:table/:id', async (request, reply) => {   
+    //     if (!['write', 'full'].includes(request.permission!)) {
+    //         return reply.code(403).send({ error: 'Forbidden: Write access required' })
+    //     }
+    //     const { table, id } = request.params as { table: string; id: string };
+    //     const result: any = await CrudService.deleteRecord(fastify, table, id);
+    //     reply.status(result?.code).send(result);
+    // });
 }
 
 export default crudRoutes;
