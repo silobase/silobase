@@ -1,15 +1,9 @@
 import createCoreApp from './core/app.ts'
-import createEnterpriseApp from "./enterprise/enterprise.ts";
 import dotenv from 'dotenv'
 dotenv.config()
 
 const start = async () => {
-  const licenseKey = process.env.LICENSE_KEY;
-  const validLicense = licenseKey!.length > 0
-
-  const app = validLicense
-    ? await createEnterpriseApp()
-    : await createCoreApp();
+  const app = await createCoreApp();
 
   try {
     await app.listen({ port: Number(process.env.PORT) || 3000, host: '0.0.0.0' })

@@ -94,12 +94,6 @@ curl -H "x-api-key: $API_KEY_READ" http://localhost:3000/rest/v1/users
 - **Core (`src/core`)** — licensed under [Apache 2.0](./LICENSE)  
   Fully open source and free for self-hosted use.
 
-- **Enterprise modules (`src/enterprise`)** — licensed under [Enhanced Elastic 2.0 Version](./LICENSE.enterprise)  
-  Source-available and usable within your organization.  
-  May not be used to offer Silobase as a hosted or managed service.
-
-
-This model ensures Silobase remains open and community-driven, while protecting the sustainability of enterprise development.
 
 
 © 2025 Silobase Authors. All rights reserved.
