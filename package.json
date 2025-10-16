@@ -24,7 +24,8 @@
 		"dev": "tsx watch ./src/server.ts",
 		"serve": "npm run build && npm start",
 		"prepublishOnly": "npm run build && mv README.md README.github.md && cp README.npm.md README.md",
-		"postpublish": "mv README.github.md README.md"
+		"postpublish": "mv README.github.md README.md",
+		 "test": "vitest"
 	},
 	"dependencies": {
 		"@fastify/cors": "^11.0.1",
