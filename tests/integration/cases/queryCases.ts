@@ -21,6 +21,14 @@ export const queryCases = [
     },
     {
         name: 'lt and lte filters',
+        url: '/rest/v1/users?limit=2&offset=0',
+        expectFn: (data: any[]) => {
+            expect(Array.isArray(data)).toBe(true);
+            expect(data.length).toBeGreaterThan(0);
+        },
+    },
+    {
+        name: 'lt and lte filters',
         url: '/rest/v1/users?age=lt.30&age=lte.28',
         expectFn: (data: any[]) => {
             expect(Array.isArray(data)).toBe(true);

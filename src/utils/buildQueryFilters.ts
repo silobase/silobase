@@ -144,12 +144,18 @@ export const buildFiltersToRaw = (
 
   let paginationClause = '';
   if (usesLimitOffset) paginationClause = [limitClause, offsetClause].filter(Boolean).join(' ');
-  else if (isMSSQL && offsetClause) {
-    if (topClause) {
-      const limitValue = topClause.replace('TOP', '').trim();
-      paginationClause = `${offsetClause} FETCH NEXT ${limitValue} ROWS ONLY`;
-    } else paginationClause = offsetClause;
+// ---------- LIMIT + OFFSET handling for MSSQL ----------
+else if (isMSSQL && offsetClause) {
+  if (topClause) {
+    // Prefer OFFSET/FETCH pagination instead of TOP
+    const limitValue = topClause.replace('TOP', '').trim();
+    topClause = ''; // <-- remove TOP from SELECT
+    paginationClause = `${offsetClause} FETCH NEXT ${limitValue} ROWS ONLY`;
+  } else {
+    paginationClause = offsetClause;
   }
+}
+
 
   const rawSql = `
     SELECT ${selectClause} FROM ${fromClause}
