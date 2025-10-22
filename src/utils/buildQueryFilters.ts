@@ -55,20 +55,30 @@ export const buildFiltersToRaw = (
     }
 
     // ---------- LIMIT ----------
-    if (key === 'limit') {
-      const limit = Number(values[0]);
-      if (usesLimitOffset) limitClause = `LIMIT ${limit}`;
-      else if (isMSSQL) topClause = `TOP ${limit} `;
-      continue;
-    }
+    // ---------- LIMIT ----------
+if (key === 'limit') {
+  const limit = Number(values[0]);
+  if (usesLimitOffset) {
+    limitClause = `LIMIT ${limit}`;
+  } else if (isMSSQL) {
+    // Only assign TOP if no OFFSET is provided later
+    topClause = `TOP ${limit} `;
+  }
+  continue;
+}
 
     // ---------- OFFSET ----------
     if (key === 'offset') {
-      const offset = Number(values[0]);
-      if (usesLimitOffset) offsetClause = `OFFSET ${offset}`;
-      else if (isMSSQL) offsetClause = `OFFSET ${offset} ROWS`;
-      continue;
-    }
+  const offset = Number(values[0]);
+  if (usesLimitOffset) {
+    offsetClause = `OFFSET ${offset}`;
+  } else if (isMSSQL) {
+    offsetClause = `OFFSET ${offset} ROWS`;
+    // If OFFSET exists, MSSQL requires ORDER BY
+    if (!orderByClause) orderByClause = `ORDER BY (SELECT NULL)`;
+  }
+  continue;
+}
 
     // ---------- ORDER BY ----------
     if (key === 'orderBy') {
@@ -133,28 +143,35 @@ export const buildFiltersToRaw = (
   // MSSQL requires ORDER BY if OFFSET is used
   if (isMSSQL && offsetClause && !orderByClause) orderByClause = `ORDER BY (SELECT NULL)`;
 
+
+
+  let paginationClause = '';
+
+if (usesLimitOffset) {
+  paginationClause = [limitClause, offsetClause].filter(Boolean).join(' ');
+} else if (isMSSQL) {
+  if (offsetClause) {
+    // When OFFSET exists, use OFFSET/FETCH pagination only
+    if (topClause) {
+      const limitValue = topClause.replace('TOP', '').trim();
+      topClause = ''; // ✅ Remove TOP completely
+      paginationClause = `${offsetClause} FETCH NEXT ${limitValue} ROWS ONLY`;
+    } else {
+      paginationClause = offsetClause;
+    }
+  }
+}
   // ---------- SELECT CLAUSE ----------
   const fromClause = isMSSQL ? `${table} WITH (NOLOCK)` : table;
-  const selectClause = selectedColumns.includes('*') && query.exclude ? `${topClause}*` : `${topClause}${selectedColumns.join(', ')}`;
-
+ 
   // ---------- FINAL CLAUSES ----------
   const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
   const havingClause = having.length ? `HAVING ${having.join(' AND ')}` : '';
   const joinClause = joinClauses.join('\n');
 
-  let paginationClause = '';
-  if (usesLimitOffset) paginationClause = [limitClause, offsetClause].filter(Boolean).join(' ');
-// ---------- LIMIT + OFFSET handling for MSSQL ----------
-else if (isMSSQL && offsetClause) {
-  if (topClause) {
-    // Prefer OFFSET/FETCH pagination instead of TOP
-    const limitValue = topClause.replace('TOP', '').trim();
-    topClause = ''; // <-- remove TOP from SELECT
-    paginationClause = `${offsetClause} FETCH NEXT ${limitValue} ROWS ONLY`;
-  } else {
-    paginationClause = offsetClause;
-  }
-}
+ const selectClause = selectedColumns.includes('*') && query.exclude ? `${topClause}*` : `${topClause}${selectedColumns.join(', ')}`;
+
+
 
 
   const rawSql = `
