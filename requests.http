@@ -24,3 +24,12 @@ GET /rest/v1/posts?likes=gt.1000
 GET /rest/v1/comments?join=posts:on=comments.post_id=posts.id&join=users:on=comments.user_id=users.id&select=users.name,COUNT(comments.id) as comment_count&group_by=users.name
 GET /rest/v1/comments?join=posts:on=comments.post_id=posts.id&join=users:on=comments.user_id=users.id&select=users.country,COUNT(comments.id) as total_comments&where=posts.likes.gt.20&group_by=users.country
 GET /rest/v1/users?country=in.(US,UK)&age=gte.20&age=lte.30&name=like.i
+
+
+| Query                                                                          | Resulting SQL                                                            |
+| ------------------------------------------------------------------------------ | ------------------------------------------------------------------------ |
+| `?firstname=ilike.%john%`                                                      | `WHERE "firstname" ILIKE ?` → `['%john%']`                               |
+| `?or=(firstname.ilike.%john%,lastname.ilike.%john%)`                           | `WHERE ("firstname" ILIKE ? OR "lastname" ILIKE ?)`                      |
+| `?and=(isverified.eq.true,level.gte.200)`                                      | `WHERE ("isverified" = ? AND "level" >= ?)`                              |
+| `?or=(firstname.ilike.%john%,lastname.ilike.%john%)&department=eq.Engineering` | `WHERE ("firstname" ILIKE ? OR "lastname" ILIKE ?) AND "department" = ?` |
+

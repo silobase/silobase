@@ -21,12 +21,74 @@ export const buildFiltersToRaw = (
   const usesLimitOffset = ['pg', 'postgres', 'mysql', 'sqlite', 'sqlite3'].includes(dbClient);
   const isMSSQL = dbClient === 'mssql';
 
+  const parseCondition = (cond: string): string | null => {
+    // e.g. firstname.ilike.%john%
+    const parts = cond.split('.');
+    if (parts.length < 3) return null;
+    const [col, op, ...rest] = parts;
+    const val = rest.join('.'); // in case value has dots
+    const colName = `"${col}"`;
+
+    switch (op) {
+      case 'eq': where.push(`${colName} = ?`); bindings.push(val); return null;
+      case 'neq': where.push(`${colName} != ?`); bindings.push(val); return null;
+      case 'gt': where.push(`${colName} > ?`); bindings.push(val); return null;
+      case 'gte': where.push(`${colName} >= ?`); bindings.push(val); return null;
+      case 'lt': where.push(`${colName} < ?`); bindings.push(val); return null;
+      case 'lte': where.push(`${colName} <= ?`); bindings.push(val); return null;
+      case 'like': where.push(`${colName} LIKE ?`); bindings.push(val); return null;
+      case 'ilike': where.push(`${colName} ILIKE ?`); bindings.push(val); return null;
+      case 'in': {
+        const items = val.replace(/^\(|\)$/g, '').split(',').map(v => v.trim());
+        where.push(`${colName} IN (${items.map(() => '?').join(', ')})`);
+        bindings.push(...items);
+        return null;
+      }
+      default: return null;
+    }
+  };
+
   // ---------- PARSE QUERY ----------
   for (const key in query) {
     const value = query[key];
-
-    // Normalize all query values as array of strings
     const values = Array.isArray(value) ? value.map(String) : [String(value)];
+
+    // ---------- Supabase-style OR / AND ----------
+    if (key === 'or' || key === 'and') {
+      const logicalOp = key.toUpperCase(); // "OR" / "AND"
+      const group = values[0];
+      const inner = group.replace(/^\(|\)$/g, '');
+      const conditions = inner.split(',').map(c => c.trim());
+      const groupClauses: string[] = [];
+
+      for (const cond of conditions) {
+        const parts = cond.split('.');
+        if (parts.length < 3) continue;
+        const [col, op, ...rest] = parts;
+        const val = rest.join('.');
+        const colName = `"${col}"`;
+
+        switch (op) {
+          case 'eq': groupClauses.push(`${colName} = ?`); bindings.push(val); break;
+          case 'neq': groupClauses.push(`${colName} != ?`); bindings.push(val); break;
+          case 'gt': groupClauses.push(`${colName} > ?`); bindings.push(val); break;
+          case 'gte': groupClauses.push(`${colName} >= ?`); bindings.push(val); break;
+          case 'lt': groupClauses.push(`${colName} < ?`); bindings.push(val); break;
+          case 'lte': groupClauses.push(`${colName} <= ?`); bindings.push(val); break;
+          case 'like': groupClauses.push(`${colName} LIKE ?`); bindings.push(val); break;
+          case 'ilike': groupClauses.push(`${colName} ILIKE ?`); bindings.push(val); break;
+          case 'in': {
+            const items = val.replace(/^\(|\)$/g, '').split(',').map(v => v.trim());
+            groupClauses.push(`${colName} IN (${items.map(() => '?').join(', ')})`);
+            bindings.push(...items);
+            break;
+          }
+        }
+      }
+
+      if (groupClauses.length > 0) where.push(`(${groupClauses.join(` ${logicalOp} `)})`);
+      continue;
+    }
 
     // ---------- JOIN ----------
     if (key === 'join') {
@@ -42,45 +104,36 @@ export const buildFiltersToRaw = (
 
     // ---------- SELECT ----------
     if (key === 'select') {
-      selectedColumns = values.flatMap(v => v.split(',').map(f => {
-        const trimmed = f.trim();
-        // If it contains AS, leave it as-is
-        if (/ as /i.test(trimmed)) return trimmed;
-        // If it contains function call or dot, don't quote fully
-        if (/[\.\(\)]/.test(trimmed)) return trimmed;
-        // Otherwise, quote simple column
-        return `"${trimmed}"`;
-      }));
+      selectedColumns = values.flatMap(v =>
+        v.split(',').map(f => {
+          const trimmed = f.trim();
+          if (/ as /i.test(trimmed)) return trimmed;
+          if (/[\.\(\)]/.test(trimmed)) return trimmed;
+          return `"${trimmed}"`;
+        })
+      );
       continue;
     }
 
-    // ---------- LIMIT ----------
-    // ---------- LIMIT ----------
-if (key === 'limit') {
-  const limit = Number(values[0]);
-  if (usesLimitOffset) {
-    limitClause = `LIMIT ${limit}`;
-  } else if (isMSSQL) {
-    // Only assign TOP if no OFFSET is provided later
-    topClause = `TOP ${limit} `;
-  }
-  continue;
-}
+    // ---------- LIMIT / OFFSET / ORDER / GROUP (same as before) ----------
+    if (key === 'limit') {
+      const limit = Number(values[0]);
+      if (usesLimitOffset) limitClause = `LIMIT ${limit}`;
+      else if (isMSSQL) topClause = `TOP ${limit} `;
+      continue;
+    }
 
-    // ---------- OFFSET ----------
     if (key === 'offset') {
-  const offset = Number(values[0]);
-  if (usesLimitOffset) {
-    offsetClause = `OFFSET ${offset}`;
-  } else if (isMSSQL) {
-    offsetClause = `OFFSET ${offset} ROWS`;
-    // If OFFSET exists, MSSQL requires ORDER BY
-    if (!orderByClause) orderByClause = `ORDER BY (SELECT NULL)`;
-  }
-  continue;
-}
+      const offset = Number(values[0]);
+      if (usesLimitOffset) offsetClause = `OFFSET ${offset}`;
+      else if (isMSSQL) {
+        offsetClause = `OFFSET ${offset} ROWS`;
+        if (!orderByClause) orderByClause = `ORDER BY (SELECT NULL)`;
+      }
+      continue;
+    }
 
-    // ---------- ORDER BY ----------
+    if (key === 'order') continue; // handled in orderBy
     if (key === 'orderBy') {
       const orderField = `"${values[0]}"`;
       const direction = query.order === 'desc' ? 'DESC' : 'ASC';
@@ -88,48 +141,26 @@ if (key === 'limit') {
       continue;
     }
 
-    // ---------- GROUP BY ----------
     if (key === 'group_by') {
       const fields = values.flatMap(v => v.split(',').map(f => `"${f.trim()}"`));
       groupByClause = `GROUP BY ${fields.join(', ')}`;
       continue;
     }
 
-    // ---------- HAVING ----------
-    if (key.startsWith('having.')) {
-      const field = key.replace('having.', '');
-      for (const v of values) {
-        const parts = v.split('.');
-        if (parts.length < 2) continue;
-        const [op, val] = parts;
-        const col = `"${field}"`;
-        switch (op) {
-          case 'eq': having.push(`${col} = ?`); bindings.push(isNaN(Number(val)) ? val : Number(val)); break;
-          case 'gt': having.push(`${col} > ?`); bindings.push(isNaN(Number(val)) ? val : Number(val)); break;
-          case 'in': {
-            const items = val.replace(/^\(|\)$/g, '').split(',').map(v => v.trim());
-            having.push(`${col} IN (${items.map(() => '?').join(', ')})`);
-            bindings.push(...items);
-            break;
-          }
-        }
-      }
-      continue;
-    }
-
-    // ---------- WHERE ----------
+    // ---------- Regular WHERE ----------
     for (const v of values) {
       const parts = v.split('.');
       if (parts.length < 2) continue;
       const [op, val] = parts;
       const col = `"${key}"`;
       switch (op) {
-        case 'eq': where.push(`${col} = ?`); bindings.push(isNaN(Number(val)) ? val : Number(val)); break;
-        case 'gt': where.push(`${col} > ?`); bindings.push(isNaN(Number(val)) ? val : Number(val)); break;
-        case 'gte': where.push(`${col} >= ?`); bindings.push(isNaN(Number(val)) ? val : Number(val)); break;
-        case 'lt': where.push(`${col} < ?`); bindings.push(isNaN(Number(val)) ? val : Number(val)); break;
-        case 'lte': where.push(`${col} <= ?`); bindings.push(isNaN(Number(val)) ? val : Number(val)); break;
+        case 'eq': where.push(`${col} = ?`); bindings.push(val); break;
+        case 'gt': where.push(`${col} > ?`); bindings.push(val); break;
+        case 'gte': where.push(`${col} >= ?`); bindings.push(val); break;
+        case 'lt': where.push(`${col} < ?`); bindings.push(val); break;
+        case 'lte': where.push(`${col} <= ?`); bindings.push(val); break;
         case 'like': where.push(`${col} LIKE ?`); bindings.push(`%${val}%`); break;
+        case 'ilike': where.push(`${col} ILIKE ?`); bindings.push(`%${val}%`); break;
         case 'in': {
           const items = val.replace(/^\(|\)$/g, '').split(',').map(v => v.trim());
           where.push(`${col} IN (${items.map(() => '?').join(', ')})`);
@@ -140,46 +171,32 @@ if (key === 'limit') {
     }
   }
 
-  // MSSQL requires ORDER BY if OFFSET is used
   if (isMSSQL && offsetClause && !orderByClause) orderByClause = `ORDER BY (SELECT NULL)`;
 
-
-
   let paginationClause = '';
-
-if (usesLimitOffset) {
-  paginationClause = [limitClause, offsetClause].filter(Boolean).join(' ');
-} else if (isMSSQL) {
-  if (offsetClause) {
-    // When OFFSET exists, use OFFSET/FETCH pagination only
+  if (usesLimitOffset) paginationClause = [limitClause, offsetClause].filter(Boolean).join(' ');
+  else if (isMSSQL && offsetClause) {
     if (topClause) {
       const limitValue = topClause.replace('TOP', '').trim();
-      topClause = ''; // ✅ Remove TOP completely
+      topClause = '';
       paginationClause = `${offsetClause} FETCH NEXT ${limitValue} ROWS ONLY`;
-    } else {
-      paginationClause = offsetClause;
-    }
+    } else paginationClause = offsetClause;
   }
-}
-  // ---------- SELECT CLAUSE ----------
+
   const fromClause = isMSSQL ? `${table} WITH (NOLOCK)` : table;
- 
-  // ---------- FINAL CLAUSES ----------
   const whereClause = where.length ? `WHERE ${where.join(' AND ')}` : '';
-  const havingClause = having.length ? `HAVING ${having.join(' AND ')}` : '';
   const joinClause = joinClauses.join('\n');
 
- const selectClause = selectedColumns.includes('*') && query.exclude ? `${topClause}*` : `${topClause}${selectedColumns.join(', ')}`;
-
-
-
+  const selectClause =
+    selectedColumns.includes('*') && query.exclude
+      ? `${topClause}*`
+      : `${topClause}${selectedColumns.join(', ')}`;
 
   const rawSql = `
     SELECT ${selectClause} FROM ${fromClause}
     ${joinClause}
     ${whereClause}
     ${groupByClause}
-    ${havingClause}
     ${orderByClause}
     ${paginationClause}
   `.trim();

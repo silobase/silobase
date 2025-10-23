@@ -8,7 +8,9 @@
 
 **Silobase** is an open-source, self-hosted Backend-as-a-Service (BaaS) that instantly exposes your existing SQL databases over a clean REST API — with zero backend code.
 
+
 Unlike Firebase or Supabase, Silobase doesn’t lock you into a managed database. It connects directly to your own infrastructure — **Postgres**, **MSSQL**, **MySQL** or **SQLite**.
+
 
 > Configure via `.env`, deploy anywhere, and keep full control of your stack.
 
@@ -93,7 +95,6 @@ curl -H "x-api-key: $API_KEY_READ" http://localhost:3000/rest/v1/users
 
 - **Core (`src/core`)** — licensed under [Apache 2.0](./LICENSE)  
   Fully open source and free for self-hosted use.
-
 
 
 © 2025 Silobase Authors. All rights reserved.
